@@ -23,9 +23,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   target_link_libraries(${PROJECT_NAME} PUBLIC c++fs)
 endif()
 
-find_package(Threads REQUIRED)
-target_link_libraries(${PROJECT_NAME} PUBLIC Threads::Threads)
-
 install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
