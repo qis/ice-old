@@ -19,10 +19,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE src PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  target_link_libraries(${PROJECT_NAME} PUBLIC c++fs)
-endif()
-
 install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
