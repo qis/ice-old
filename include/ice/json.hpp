@@ -77,7 +77,7 @@ inline json parse(std::istream& is) {
 inline json parse(const std::filesystem::path& path) {
   std::ifstream is(path, std::ios::binary);
   if (!is) {
-    throw std::domain_error("could not open file: " + path.u8string());
+    throw std::domain_error("could not open file: " + path.string());
   }
   return parse(static_cast<std::istream&>(is));
 }
