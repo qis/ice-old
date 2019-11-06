@@ -10,13 +10,10 @@ using namespace ::nlohmann;
 
 namespace config {
 
-inline json parse(std::istream& is)
-{
+inline json parse(std::istream& is) {
   std::stringstream ss;
   for (std::string line; std::getline(is, line);) {
-    enum class state {
-      none, escape, escape_u, escape_0, escape_1, escape_2, string, slash, end
-    };
+    enum class state { none, escape, escape_u, escape_0, escape_1, escape_2, string, slash, end };
     auto s = state::none;
     std::size_t size = 0;
     for (auto it = line.begin(), end = line.end(); s != state::end && it != end; ++it) {
@@ -77,8 +74,7 @@ inline json parse(std::istream& is)
   return json::parse(std::move(ss));
 }
 
-inline json parse(const std::filesystem::path& path)
-{
+inline json parse(const std::filesystem::path& path) {
   std::ifstream is(path, std::ios::binary);
   if (!is) {
     throw std::domain_error("could not open file: " + path.u8string());
@@ -86,8 +82,7 @@ inline json parse(const std::filesystem::path& path)
   return parse(static_cast<std::istream&>(is));
 }
 
-inline json parse(const std::string& s)
-{
+inline json parse(const std::string& s) {
   std::istringstream is(s);
   return parse(static_cast<std::istream&>(is));
 }

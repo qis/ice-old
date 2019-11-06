@@ -8,10 +8,7 @@ namespace log {
 
 class file : public sink {
 public:
-  file(const std::filesystem::path& filename,
-    severity severity = severity::debug,
-    bool date = true,
-    bool milliseconds = true);
+  file(const std::filesystem::path& filename, severity severity = severity::debug, bool date = true, bool milliseconds = true);
 
   virtual ~file();
 

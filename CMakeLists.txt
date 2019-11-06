@@ -1,47 +1,28 @@
-cmake_minimum_required(VERSION 3.14.0 FATAL_ERROR)
-project(ice VERSION 0.9.6 LANGUAGES CXX)
-
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-if(WIN32)
-  add_definitions(-D_UNICODE -DUNICODE -DWIN32_LEAN_AND_MEAN -DWINVER=0x0A00 -D_WIN32_WINNT=0x0A00)
-  add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE)
-  add_definitions(-D_ATL_SECURE_NO_DEPRECATE -D_SCL_SECURE_NO_WARNINGS)
-endif()
+cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
+project(ice VERSION 0.4.0 LANGUAGES CXX)
 
 file(GLOB_RECURSE headers CONFIGURE_DEPENDS include/*.hpp)
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS src/*.hpp src/*.cpp)
 
-add_library(${PROJECT_NAME} ${headers} ${sources})
-target_include_directories(${PROJECT_NAME} PRIVATE src PUBLIC
+add_library(ice STATIC ${headers} ${sources})
+target_compile_features(ice PRIVATE cxx_std_20)
+target_include_directories(ice PRIVATE src PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-find_package(nlohmann_json CONFIG REQUIRED)
-target_link_libraries(${PROJECT_NAME} PUBLIC nlohmann_json::nlohmann_json)
+if(WIN32)
+  target_compile_definitions(ice PRIVATE _UNICODE UNICODE WIN32_LEAN_AND_MEAN NOMINMAX)
+endif()
 
-install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
-
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include FILES_MATCHING PATTERN "*.hpp")
-install(EXPORT ${PROJECT_NAME} FILE ${PROJECT_NAME}-targets.cmake NAMESPACE ${PROJECT_NAME}::
-  DESTINATION lib/cmake/${PROJECT_NAME})
+install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN "*.hpp")
+install(TARGETS ice EXPORT ice LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(EXPORT ice FILE ice-config.cmake NAMESPACE ice:: DESTINATION lib/cmake/ice)
 
 include(CMakePackageConfigHelpers)
 
-configure_package_config_file(res/config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
-  INSTALL_DESTINATION lib/cmake/${PROJECT_NAME})
-
-write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/ice-config-version.cmake
   VERSION ${PROJECT_VERSION} COMPATIBILITY SameMajorVersion)
 
-install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-  DESTINATION lib/cmake/${PROJECT_NAME})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ice-config-version.cmake DESTINATION lib/cmake/ice)
 
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+add_library(ice::ice ALIAS ice)

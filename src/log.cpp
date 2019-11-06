@@ -1,6 +1,6 @@
+#include <ice/exception.hpp>
 #include <ice/log.hpp>
 #include <ice/log/console.hpp>
-#include <ice/exception.hpp>
 #include <algorithm>
 #include <atomic>
 #include <condition_variable>
@@ -174,24 +174,30 @@ std::string format(time_point tp, bool date, bool milliseconds) {
 
 std::string format(severity s, bool padding) {
   switch (s) {
-  case severity::emergency: return padding ? "emergency" : "emergency";
-  case severity::alert: return padding ? "alert    " : "alert";
-  case severity::critical: return padding ? "critical " : "critical";
-  case severity::error: return padding ? "error    " : "error";
-  case severity::warning: return padding ? "warning  " : "warning";
-  case severity::notice: return padding ? "notice   " : "notice";
-  case severity::info: return padding ? "info     " : "info";
-  case severity::debug: return padding ? "debug    " : "debug";
+  case severity::emergency:
+    return padding ? "emergency" : "emergency";
+  case severity::alert:
+    return padding ? "alert    " : "alert";
+  case severity::critical:
+    return padding ? "critical " : "critical";
+  case severity::error:
+    return padding ? "error    " : "error";
+  case severity::warning:
+    return padding ? "warning  " : "warning";
+  case severity::notice:
+    return padding ? "notice   " : "notice";
+  case severity::info:
+    return padding ? "info     " : "info";
+  case severity::debug:
+    return padding ? "debug    " : "debug";
   }
   return padding ? "unknown  " : "unknown";
 }
 
-stream::stream(severity severity) : std::stringbuf(), std::ostream(this), severity_(severity) {
-}
+stream::stream(severity severity) : std::stringbuf(), std::ostream(this), severity_(severity) {}
 
-stream::stream(stream&& other) :
-  std::stringbuf(std::move(other)), std::ostream(this), severity_(other.severity_), time_point_(other.time_point_) {
-}
+stream::stream(stream&& other)
+  : std::stringbuf(std::move(other)), std::ostream(this), severity_(other.severity_), time_point_(other.time_point_) {}
 
 stream& stream::operator=(stream&& other) {
   static_cast<std::stringbuf&>(*this) = std::move(other);

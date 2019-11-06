@@ -6,7 +6,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
-#include <string>
 
 #define ICE_DBL_INT_ADD(a, b, c) \
   if (a > 0xffffffff - (c)) {    \

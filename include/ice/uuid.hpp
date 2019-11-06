@@ -19,8 +19,7 @@ struct uuid {
     std::uint64_t s[2];
   } data;
 
-  constexpr uuid() : data({}) {
-  }
+  constexpr uuid() : data({}) {}
 
   // Parses a string.
   explicit uuid(std::string_view str);

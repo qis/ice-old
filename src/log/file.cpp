@@ -15,7 +15,7 @@ public:
     severity_(severity), date_(date), milliseconds_(milliseconds) {
     os_.open(filename, std::ios::binary | std::ios::app);
     if (!os_.is_open()) {
-      throw std::runtime_error("could not open log file: " + filename.u8string());
+      throw std::runtime_error("could not open log file: " + filename.string());
     }
   }
 

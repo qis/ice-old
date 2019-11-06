@@ -1,5 +1,5 @@
-#include <ice/uuid.hpp>
 #include <ice/exception.hpp>
+#include <ice/uuid.hpp>
 #include <algorithm>
 #include <iomanip>
 #include <limits>
@@ -18,8 +18,9 @@
 namespace ice {
 
 uuid::uuid(std::string_view str) {
-  auto count = std::sscanf(str.data(), UUID_FORMAT, &data.v.tl, &data.v.tm, &data.v.thv, &data.v.csr, &data.v.csl,
-    &data.v.n[0], &data.v.n[1], &data.v.n[2], &data.v.n[3], &data.v.n[4], &data.v.n[5]);
+  auto count = std::sscanf(
+    str.data(), UUID_FORMAT, &data.v.tl, &data.v.tm, &data.v.thv, &data.v.csr, &data.v.csl, &data.v.n[0], &data.v.n[1],
+    &data.v.n[2], &data.v.n[3], &data.v.n[4], &data.v.n[5]);
   if (count != UUID_FORMAT_COUNT) {
     throw ice::runtime_error("uuid format error") << str;
   }
@@ -28,8 +29,9 @@ uuid::uuid(std::string_view str) {
 std::string uuid::str() const {
   std::string str;
   str.resize(UUID_FORMAT_SIZE + 1);
-  auto size = std::snprintf(&str[0], UUID_FORMAT_SIZE + 1, UUID_FORMAT, data.v.tl, data.v.tm, data.v.thv, data.v.csr,
-    data.v.csl, data.v.n[0], data.v.n[1], data.v.n[2], data.v.n[3], data.v.n[4], data.v.n[5]);
+  auto size = std::snprintf(
+    &str[0], UUID_FORMAT_SIZE + 1, UUID_FORMAT, data.v.tl, data.v.tm, data.v.thv, data.v.csr, data.v.csl, data.v.n[0],
+    data.v.n[1], data.v.n[2], data.v.n[3], data.v.n[4], data.v.n[5]);
   if (size != UUID_FORMAT_SIZE) {
     throw ice::runtime_error("uuid format size error");
   }

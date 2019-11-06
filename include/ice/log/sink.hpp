@@ -34,8 +34,7 @@ public:
 
 class null : public sink {
 public:
-  void write(const std::vector<ice::log::message>& messages) final {
-  }
+  void write(const std::vector<ice::log::message>& messages) final {}
 };
 
 }  // namespace log
