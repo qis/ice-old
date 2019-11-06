@@ -1,3 +1,4 @@
 Source: ice
 Version: 0.4.0
 Description: Minimalistic utility framework for C++20.
+Build-Depends: nlohmann-json
