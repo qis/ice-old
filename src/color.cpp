@@ -42,6 +42,10 @@
 #error unsupported platform
 #endif
 
+#ifdef __GNUC__
+#undef unix
+#endif
+
 #if defined(OS_MACOS) || defined(OS_UNIX)
 #include <unistd.h>
 #elif defined(OS_WINDOWS)
