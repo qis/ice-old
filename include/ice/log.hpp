@@ -13,7 +13,13 @@ void remove(std::shared_ptr<ice::log::sink> sink);
 std::string format(time_point tp, bool date = true, bool milliseconds = true);
 std::string format(severity s, bool padding = true);
 
-class stream : public std::stringbuf, private std::ostream {
+class stream : public std::stringbuf,
+#ifdef __GNUC__
+  private
+#else
+  public
+#endif
+  std::ostream {
 public:
   explicit stream(severity severity);
 
