@@ -14,7 +14,7 @@ std::string format(time_point tp, bool date = true, bool milliseconds = true);
 std::string format(severity s, bool padding = true);
 
 class stream : public std::stringbuf,
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__clang__)
   private
 #else
   public
