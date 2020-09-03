@@ -48,16 +48,19 @@ static std::uint32_t K[64] = {
 };
 // clang-format on
 
-class sha256 {
+class sha256
+{
 public:
-  sha256() noexcept {
+  sha256() noexcept
+  {
     reset();
   }
 
   sha256(const sha256&) = delete;
   void operator=(const sha256&) = delete;
 
-  void reset() noexcept {
+  void reset() noexcept
+  {
     size = 0;
 
     // RFC 6234, 6.1
@@ -71,26 +74,30 @@ public:
     H[7] = 0x5be0cd19;
   }
 
-  void feed(const unsigned char c) noexcept {
+  void feed(const unsigned char c) noexcept
+  {
     M[size++ % 64] = c;
     if ((size % 64) == 0) {
       process();
     }
   }
 
-  void feed(const void* p, std::size_t s) noexcept {
+  void feed(const void* p, std::size_t s) noexcept
+  {
     const unsigned char* q = static_cast<const unsigned char*>(p);
     while (s--) {
       feed(*q++);
     }
   }
 
-  void feed(const std::string& v) noexcept {
+  void feed(const std::string& v) noexcept
+  {
     feed(v.data(), v.size());
   }
 
   // RFC 6234, 4.1
-  void store_unsafe(unsigned char* buffer) noexcept {
+  void store_unsafe(unsigned char* buffer) noexcept
+  {
     std::size_t i = size % 64;
     if (i < 56) {
       M[i++] = 0x80;
@@ -131,14 +138,16 @@ public:
     }
   }
 
-  std::string get() {
+  std::string get()
+  {
     std::string result;
     result.resize(32);
     store_unsafe((unsigned char*)(result.data()));
     return result;
   }
 
-  std::string str() {
+  std::string str()
+  {
     const auto data = get();
     std::string str;
     str.resize(64);
@@ -152,7 +161,8 @@ public:
 
 private:
   // RFC 6234, 6.2
-  void process() noexcept {
+  void process() noexcept
+  {
     std::uint32_t W[64];
 
     // step 1
@@ -199,7 +209,8 @@ private:
     H[7] += h;
   }
 
-  static char to_ascii(unsigned char c) {
+  static char to_ascii(unsigned char c)
+  {
     return c < 10 ? '0' + c : 'a' + c - 10;
   }
 

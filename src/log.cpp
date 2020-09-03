@@ -11,22 +11,24 @@
 #include <cstdio>
 
 #ifdef _WIN32
-#include <windows.h>
-#include <iostream>
+#  include <windows.h>
+#  include <iostream>
 #endif
 
 namespace ice {
 namespace log {
 namespace {
 
-class logger {
+class logger
+{
   logger() = default;
 
 public:
   logger(logger&& other) = delete;
   logger& operator=(logger&& other) = delete;
 
-  ~logger() {
+  ~logger()
+  {
     try {
       {
         std::lock_guard<std::mutex> lock(messages_mutex_);
@@ -41,17 +43,20 @@ public:
     }
   }
 
-  void add(std::shared_ptr<ice::log::sink> sink) {
+  void add(std::shared_ptr<ice::log::sink> sink)
+  {
     std::lock_guard<std::mutex> lock(sinks_mutex_);
     sinks_.insert(std::move(sink));
   }
 
-  void remove(std::shared_ptr<ice::log::sink> sink) {
+  void remove(std::shared_ptr<ice::log::sink> sink)
+  {
     std::lock_guard<std::mutex> lock(sinks_mutex_);
     sinks_.erase(sink);
   }
 
-  void queue(ice::log::time_point time_point, ice::log::severity severity, std::string message) {
+  void queue(ice::log::time_point time_point, ice::log::severity severity, std::string message)
+  {
     std::lock_guard<std::mutex> lock(messages_mutex_);
     messages_.push_back({ time_point, severity, std::move(message) });
     if (!stop_ && !thread_.joinable()) {
@@ -59,18 +64,22 @@ public:
       if (sinks_.empty()) {
         sinks_.emplace(std::make_shared<console>());
       }
-      thread_ = std::thread([this]() { run(); });
+      thread_ = std::thread([this]() {
+        run();
+      });
     }
     cv_.notify_one();
   }
 
-  static logger& get() {
+  static logger& get()
+  {
     static logger logger;
     return logger;
   }
 
 private:
-  void write(const std::vector<message>& messages) {
+  void write(const std::vector<message>& messages)
+  {
     if (messages.empty()) {
       return;
     }
@@ -88,7 +97,8 @@ private:
     }
   }
 
-  void run() {
+  void run()
+  {
     while (!stop_) {
       std::vector<message> messages;
       {
@@ -121,15 +131,18 @@ private:
 
 }  // namespace
 
-void add(std::shared_ptr<ice::log::sink> sink) {
+void add(std::shared_ptr<ice::log::sink> sink)
+{
   logger::get().add(std::move(sink));
 }
 
-void remove(std::shared_ptr<ice::log::sink> sink) {
+void remove(std::shared_ptr<ice::log::sink> sink)
+{
   logger::get().remove(std::move(sink));
 }
 
-std::string format(time_point tp, bool date, bool milliseconds) {
+std::string format(time_point tp, bool date, bool milliseconds)
+{
   auto time = clock::to_time_t(tp);
   tm tm = {};
 #ifndef _WIN32
@@ -157,7 +170,8 @@ std::string format(time_point tp, bool date, bool milliseconds) {
   std::string str;
   if (date && milliseconds) {
     str.resize(23 + 1);
-    size = std::snprintf(&str[0], str.size(), "%04d-%02d-%02d %02d:%02d:%02d.%03d", Y, M, D, h, m, s, ms);
+    size = std::snprintf(
+      &str[0], str.size(), "%04d-%02d-%02d %02d:%02d:%02d.%03d", Y, M, D, h, m, s, ms);
   } else if (date && !milliseconds) {
     str.resize(19 + 1);
     size = std::snprintf(&str[0], str.size(), "%04d-%02d-%02d %02d:%02d:%02d", Y, M, D, h, m, s);
@@ -172,7 +186,8 @@ std::string format(time_point tp, bool date, bool milliseconds) {
   return str;
 }
 
-std::string format(severity s, bool padding) {
+std::string format(severity s, bool padding)
+{
   switch (s) {
   case severity::emergency:
     return padding ? "emergency" : "emergency";
@@ -197,16 +212,20 @@ std::string format(severity s, bool padding) {
 stream::stream(severity severity) : std::stringbuf(), std::ostream(this), severity_(severity) {}
 
 stream::stream(stream&& other)
-  : std::stringbuf(std::move(other)), std::ostream(this), severity_(other.severity_), time_point_(other.time_point_) {}
+  : std::stringbuf(std::move(other)), std::ostream(this), severity_(other.severity_),
+    time_point_(other.time_point_)
+{}
 
-stream& stream::operator=(stream&& other) {
+stream& stream::operator=(stream&& other)
+{
   static_cast<std::stringbuf&>(*this) = std::move(other);
   severity_ = other.severity_;
   time_point_ = other.time_point_;
   return *this;
 }
 
-stream::~stream() {
+stream::~stream()
+{
   try {
     auto s = str();
     auto pos = s.find_last_not_of(" \t\n\v\f\r");
@@ -220,13 +239,15 @@ stream::~stream() {
   }
 }
 
-stream& stream::operator<<(const std::error_code& ec) {
+stream& stream::operator<<(const std::error_code& ec)
+{
   auto& os = *this;
   os << ec.category().name() << ' ' << ec.value() << ": " << ec.message();
   return os;
 }
 
-stream& stream::operator<<(const std::exception_ptr& e) {
+stream& stream::operator<<(const std::exception_ptr& e)
+{
   auto& os = *this;
   try {
     if (e) {

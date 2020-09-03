@@ -20,19 +20,22 @@ enum class severity {
   debug = 7,
 };
 
-struct message {
+struct message
+{
   log::time_point time_point;
   log::severity severity;
   std::string text;
 };
 
-class sink {
+class sink
+{
 public:
   virtual ~sink() = default;
   virtual void write(const std::vector<ice::log::message>& messages) = 0;
 };
 
-class null : public sink {
+class null : public sink
+{
 public:
   void write(const std::vector<ice::log::message>& messages) final {}
 };

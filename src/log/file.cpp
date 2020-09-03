@@ -1,31 +1,34 @@
-#include <ice/log/file.hpp>
 #include <ice/log.hpp>
+#include <ice/log/file.hpp>
 #include <fstream>
 
 #ifdef _WIN32
-#include <windows.h>
+#  include <windows.h>
 #endif
 
 namespace ice {
 namespace log {
 
-class file::impl {
+class file::impl
+{
 public:
-  impl(const std::filesystem::path& filename, severity severity, bool date, bool milliseconds) :
-    severity_(severity), date_(date), milliseconds_(milliseconds) {
+  impl(const std::filesystem::path& filename, severity severity, bool date, bool milliseconds)
+    : severity_(severity), date_(date), milliseconds_(milliseconds)
+  {
     os_.open(filename, std::ios::binary | std::ios::app);
     if (!os_.is_open()) {
       throw std::runtime_error("could not open log file: " + filename.string());
     }
   }
 
-  void write(const std::vector<message>& messages) {
+  void write(const std::vector<message>& messages)
+  {
     for (const auto& message : messages) {
       if (message.severity > severity_) {
         continue;
       }
-      os_ << format(message.time_point, date_, milliseconds_) << " [" << format(message.severity, true) << "] "
-          << message.text;
+      os_ << format(message.time_point, date_, milliseconds_) << " ["
+          << format(message.severity, true) << "] " << message.text;
 #ifdef _WIN32
       os_ << '\r';
 #endif
@@ -41,14 +44,14 @@ private:
   bool milliseconds_ = true;
 };
 
-file::file(const std::filesystem::path& filename, severity severity, bool date, bool milliseconds) :
-  impl_(std::make_unique<impl>(filename, severity, date, milliseconds)) {
-}
+file::file(const std::filesystem::path& filename, severity severity, bool date, bool milliseconds)
+  : impl_(std::make_unique<impl>(filename, severity, date, milliseconds))
+{}
 
-file::~file() {
-}
+file::~file() {}
 
-void file::write(const std::vector<message>& messages) {
+void file::write(const std::vector<message>& messages)
+{
   impl_->write(messages);
 }
 

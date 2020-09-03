@@ -7,14 +7,16 @@
 
 namespace ice {
 
-class exception {
+class exception
+{
 public:
   virtual const char* what() const noexcept = 0;
   virtual const char* info() const noexcept = 0;
 };
 
 template <typename T>
-class exception_stream : public exception, public T {
+class exception_stream : public exception, public T
+{
 public:
   using endl = std::ostream& (*)(std::ostream&);
 
@@ -27,7 +29,8 @@ public:
   exception_stream& operator=(const exception_stream& other) = default;
 
   template <typename V>
-  exception_stream& operator<<(const V& v) {
+  exception_stream& operator<<(const V& v)
+  {
     std::ostringstream oss;
     oss.flags(flags_);
     oss.precision(precision_);
@@ -40,21 +43,26 @@ public:
     return *this;
   }
 
-  exception_stream& operator<<(const std::error_code& ec) {
-    info_.append(std::string(ec.category().name()) + ' ' + std::to_string(ec.value()) + ": " + ec.message());
+  exception_stream& operator<<(const std::error_code& ec)
+  {
+    info_.append(
+      std::string(ec.category().name()) + ' ' + std::to_string(ec.value()) + ": " + ec.message());
     return *this;
   }
 
-  exception_stream& operator<<(endl) {
+  exception_stream& operator<<(endl)
+  {
     info_.push_back('\n');
     return *this;
   }
 
-  const char* what() const noexcept override {
+  const char* what() const noexcept override
+  {
     return T::what();
   }
 
-  const char* info() const noexcept override {
+  const char* info() const noexcept override
+  {
     if (info_.empty()) {
       return nullptr;
     }
@@ -62,7 +70,8 @@ public:
   }
 
 private:
-  static std::ios_base::fmtflags default_flags() {
+  static std::ios_base::fmtflags default_flags()
+  {
     static const std::ios_base::fmtflags flags = std::ostringstream().flags();
     return flags;
   }

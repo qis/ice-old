@@ -1,14 +1,14 @@
 #include <ice/application.hpp>
 #ifdef _WIN32
-#include <windows.h>
+#  include <windows.h>
 #endif
 #ifdef __linux__
-#include <limits.h>
-#include <stdlib.h>
+#  include <limits.h>
+#  include <stdlib.h>
 #endif
 #ifdef __FreeBSD__
-#include <sys/sysctl.h>
-#include <sys/types.h>
+#  include <sys/sysctl.h>
+#  include <sys/types.h>
 #endif
 
 namespace ice {
@@ -24,7 +24,8 @@ namespace application {
 // NetBSD: readlink /proc/curproc/exe
 // DragonFly BSD: readlink /proc/curproc/file
 // Windows: GetModuleFileName() with hModule = NULL
-std::filesystem::path path() {
+std::filesystem::path path()
+{
 #ifdef _WIN32
   DWORD size = 0;
   std::wstring str;

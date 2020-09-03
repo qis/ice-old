@@ -15,11 +15,12 @@ std::string format(severity s, bool padding = true);
 
 class stream : public std::stringbuf,
 #if defined(__GNUC__) && !defined(__clang__)
-  private
+               private
 #else
-  public
+               public
 #endif
-  std::ostream {
+               std::ostream
+{
 public:
   explicit stream(severity severity);
 
@@ -29,7 +30,8 @@ public:
   virtual ~stream();
 
   template <typename T>
-  stream& operator<<(const T& v) {
+  stream& operator<<(const T& v)
+  {
     static_cast<std::ostream&>(*this) << v;
     return *this;
   }
@@ -42,78 +44,92 @@ private:
   time_point time_point_ = clock::now();
 };
 
-class emergency : public stream {
+class emergency : public stream
+{
 public:
   emergency() : stream(severity::emergency) {}
 
   template <typename T>
-  emergency& operator<<(const T& v) {
+  emergency& operator<<(const T& v)
+  {
     static_cast<stream&>(*this) << v;
     return *this;
   }
 };
 
-class critical : public stream {
+class critical : public stream
+{
 public:
   critical() : stream(severity::critical) {}
 
   template <typename T>
-  critical& operator<<(const T& v) {
+  critical& operator<<(const T& v)
+  {
     static_cast<stream&>(*this) << v;
     return *this;
   }
 };
 
-class error : public stream {
+class error : public stream
+{
 public:
   error() : stream(severity::error) {}
 
   template <typename T>
-  error& operator<<(const T& v) {
+  error& operator<<(const T& v)
+  {
     static_cast<stream&>(*this) << v;
     return *this;
   }
 };
 
-class warning : public stream {
+class warning : public stream
+{
 public:
   warning() : stream(severity::warning) {}
 
   template <typename T>
-  warning& operator<<(const T& v) {
+  warning& operator<<(const T& v)
+  {
     static_cast<stream&>(*this) << v;
     return *this;
   }
 };
 
-class notice : public stream {
+class notice : public stream
+{
 public:
   notice() : stream(severity::notice) {}
 
   template <typename T>
-  notice& operator<<(const T& v) {
+  notice& operator<<(const T& v)
+  {
     static_cast<stream&>(*this) << v;
     return *this;
   }
 };
 
-class info : public stream {
+class info : public stream
+{
 public:
   info() : stream(severity::info) {}
 
   template <typename T>
-  info& operator<<(const T& v) {
+  info& operator<<(const T& v)
+  {
     static_cast<stream&>(*this) << v;
     return *this;
   }
 };
 
-class debug : public stream {
+class debug : public stream
+{
 public:
   debug() : stream(severity::debug) {}
 
   template <typename T>
-  debug& operator<<(const T& v) {
+  debug& operator<<(const T& v)
+  {
     static_cast<stream&>(*this) << v;
     return *this;
   }

@@ -65,7 +65,8 @@ namespace base {
 constexpr const char table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 constexpr const char padding = '=';
 
-inline std::string encode(std::string_view data) {
+inline std::string encode(std::string_view data)
+{
   auto src = data.data();
   auto size = data.size();
   std::string dst;
@@ -94,11 +95,13 @@ inline std::string encode(std::string_view data) {
   return dst;
 }
 
-inline std::string encode(std::basic_string_view<unsigned char> data) {
+inline std::string encode(std::basic_string_view<unsigned char> data)
+{
   return encode(std::string_view(reinterpret_cast<const char*>(data.data()), data.size()));
 }
 
-inline std::string decode(std::string_view data) {
+inline std::string decode(std::string_view data)
+{
   constexpr auto begin = std::begin(table);
   constexpr auto end = std::end(table);
   std::string dst;
@@ -143,7 +146,8 @@ inline std::string decode(std::string_view data) {
   return dst;
 }
 
-inline std::string decode(std::basic_string_view<unsigned char> data) {
+inline std::string decode(std::basic_string_view<unsigned char> data)
+{
   return decode(std::string_view(reinterpret_cast<const char*>(data.data()), data.size()));
 }
 

@@ -17,21 +17,46 @@
 
 namespace ice {
 
-uuid::uuid(std::string_view str) {
+uuid::uuid(std::string_view str)
+{
   auto count = std::sscanf(
-    str.data(), UUID_FORMAT, &data.v.tl, &data.v.tm, &data.v.thv, &data.v.csr, &data.v.csl, &data.v.n[0], &data.v.n[1],
-    &data.v.n[2], &data.v.n[3], &data.v.n[4], &data.v.n[5]);
+    str.data(),
+    UUID_FORMAT,
+    &data.v.tl,
+    &data.v.tm,
+    &data.v.thv,
+    &data.v.csr,
+    &data.v.csl,
+    &data.v.n[0],
+    &data.v.n[1],
+    &data.v.n[2],
+    &data.v.n[3],
+    &data.v.n[4],
+    &data.v.n[5]);
   if (count != UUID_FORMAT_COUNT) {
     throw ice::runtime_error("uuid format error") << str;
   }
 }
 
-std::string uuid::str() const {
+std::string uuid::str() const
+{
   std::string str;
   str.resize(UUID_FORMAT_SIZE + 1);
   auto size = std::snprintf(
-    &str[0], UUID_FORMAT_SIZE + 1, UUID_FORMAT, data.v.tl, data.v.tm, data.v.thv, data.v.csr, data.v.csl, data.v.n[0],
-    data.v.n[1], data.v.n[2], data.v.n[3], data.v.n[4], data.v.n[5]);
+    &str[0],
+    UUID_FORMAT_SIZE + 1,
+    UUID_FORMAT,
+    data.v.tl,
+    data.v.tm,
+    data.v.thv,
+    data.v.csr,
+    data.v.csl,
+    data.v.n[0],
+    data.v.n[1],
+    data.v.n[2],
+    data.v.n[3],
+    data.v.n[4],
+    data.v.n[5]);
   if (size != UUID_FORMAT_SIZE) {
     throw ice::runtime_error("uuid format size error");
   }
@@ -39,12 +64,14 @@ std::string uuid::str() const {
   return str;
 }
 
-uuid uuid::generate() {
+uuid uuid::generate()
+{
   ice::uuid uuid;
 
   // Set the UUID to a random value.
   static thread_local std::random_device rd;
-  static thread_local std::uniform_int_distribution<uint64_t> dist(0, std::numeric_limits<std::uint64_t>::max());
+  static thread_local std::uniform_int_distribution<uint64_t> dist(
+    0, std::numeric_limits<std::uint64_t>::max());
   uuid.data.s[0] = dist(rd);
   uuid.data.s[1] = dist(rd);
 
@@ -55,7 +82,8 @@ uuid uuid::generate() {
   return uuid;
 }
 
-bool uuid::check(std::string_view str) noexcept {
+bool uuid::check(std::string_view str) noexcept
+{
   if (str.size() != 36) {
     return false;
   }

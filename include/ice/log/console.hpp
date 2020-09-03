@@ -5,7 +5,8 @@
 namespace ice {
 namespace log {
 
-class console : public sink {
+class console : public sink
+{
 public:
   console(severity severity = severity::debug, bool date = true, bool milliseconds = true);
   virtual ~console();
