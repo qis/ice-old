@@ -176,8 +176,11 @@ void change_attributes(std::ostream& stream, int foreground, int background)
 
 #endif  // OS_WINDOWS
 
-inline std::ostream&
-set_color(std::ostream& stream, const char* es, int foreground = -1, int background = -1)
+inline std::ostream& set_color(
+  std::ostream& stream,
+  const char* es,
+  int foreground = -1,
+  int background = -1)
 {
   auto type = get_color_type(stream);
   switch (type) {
